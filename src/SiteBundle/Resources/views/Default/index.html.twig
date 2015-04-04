@@ -1,0 +1,131 @@
+{% extends 'SiteBundle::Default/squelette.html.twig' %}
+
+{% block body %}
+    
+        
+
+        
+        <div class="container" style="margin-top:10px;">
+            
+                    <div class="well">
+                <div class="row">
+                    <div class="col-sm-4" style="margin-top:7px;text-align:left">
+                        <a href="/">Afficher les dossiers</a>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <form>
+                        <input name="q" action="/" method="GET" placeholder="Rechercher" style="width:calc(100% - 50px);display:inline-block;" class="form-control" type="text" id="searchText"><!--
+                        --><div style="width:45px;display:inline-block;margin-left: 0px">
+                            <button action="submit" style="width:49px;margin-top: -3px;" class="btn btn-default"">Ok</button>
+                        </div>
+                        </form>
+                        
+                    </div>
+                    
+                    <div class="col-sm-4">
+                        <button data-toggle="modal" data-target="#modalAdd" style="width:100%" class="btn btn-success">
+                            Ajouter un DOSSIER
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+    
+            
+            
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nom du dossier</th>
+                        <th>Description</th>
+                        <th>Mots-clé</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dossier in dossiers %}
+                    <tr>
+                        <td><a href="{{ dossier.url }}"> {{ dossier.name }}  </a></td>
+                        <td>{{ dossier.description }}</td>
+                        <td>
+                            {% for tag in dossier.tags %}
+                                <a style="margin-right:4px" href="?q={{tag}}">{{tag}}</a>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    
+                    
+                    
+        <div id="modalAdd" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Création d'un nouveau dossier</h4>
+                    </div>
+                    <div class="modal-body">
+                        
+                            <div class="row">
+                                <label class="col-sm-4 control-label">Nom du dossier</label>
+                                <div class="col-sm-8">
+                                    <input id="nom" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:10px">
+                                <label class="col-sm-4 control-label">Description</label>
+                                <div class="col-sm-8">
+                                    <textarea rows="5" id="description" class="form-control"></textarea>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:10px">
+                                <label class="col-sm-4 control-label">Mots-clé</label>
+                                <div class="col-sm-8">
+                                    <input id="tags" class="form-control">
+                                </div>
+                            </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default">Annuler</button>
+                        <button type="button" onclick="ajouterDossier()" data-dismiss="modal" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    
+                    
+        <script>
+
+            function ajouterDossier()
+            {
+                var data = {
+                    nom:$('#nom').val(),
+                    description:$('#description').val(),
+                    tags:$('#tags').val()
+                };
+                
+                console.log(data);
+
+                $.ajax({
+                    url: '/api/ajouter-dossier',
+                    data: data,
+                    type: 'POST',
+                    cache: false,
+                    success: function (response) {
+                        window.location = '/' + response;
+                },
+                error: function(err) { alert(err); }
+                });
+            }
+
+            function searchClick()
+            {
+                window.location = '/?q='+encodeURI($('#searchText').val());
+            }
+
+        </script>
+        
+{% endblock %}

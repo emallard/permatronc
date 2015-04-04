@@ -1,0 +1,360 @@
+{% extends 'SiteBundle::Default/squelette.html.twig' %}
+
+{% block body %}
+            
+            
+    
+    
+        <div class="container" style="margin-top: 100px;">
+            <div class="well">
+                <div class="row" style="font-size: 130%;">
+                    <div class="col-sm-3">
+                        <a href="/"><img src="{{ asset('bundles/site/previous.png' ) }}"> Afficher les dossiers</a>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="pull-right">DOSSIER</label>
+                    </div>
+                    <div class="col-sm-7">
+                        {{ dossier.name }}
+                    </div>
+                </div>
+                
+                <div style="margin-top:7px" class="row">
+                    <div class="col-sm-3">
+                        <button class="btn btn-default" data-toggle="modal" data-target="#modalModifier">
+                            Modifier
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="pull-right">Description</label>
+                    </div>
+                    <div class="col-sm-7">
+                        {{ dossier.description }}
+                        </div>
+                </div>
+                
+                
+                <div style="margin-top:7px" class="row">
+                    <div class="col-sm-3">
+                        
+                    </div>
+                    <div class="col-sm-2">
+                        <label class="pull-right">Mots-clé</label>
+                    </div>
+                    
+                    <div class="col-sm-7">
+                        {% for tag in dossier.tags %}
+                            {{ tag }}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                
+            </div>
+
+            <hr>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <button class="btn btn-default"
+                                            data-bind="click:downloadZip">
+                                        <span>Tout télécharger (.zip)</span>
+                                    </button>
+                                </th>
+                                <th>
+                                    <div style="display:inline-block;margin-top:7px;">Fichier</div>
+                                    <button data-toggle="modal" 
+                                            data-target="#modalAjouter" 
+                                            class="btn btn-success pull-right"
+                                            style="padding-left:30px; padding-right: 30px;">
+                                        Ajouter FICHIERS
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fichier in dossier.files %}
+                            <tr>
+                                <td style="width:180px; text-align: center;">
+                                    <a download href={{fichier.url}}>Télécharger</span></a></td>
+                                <td ><a href={{fichier.url}}> {{fichier.name}}</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    
+
+        <div id="modalModifier" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Modification</h4>
+                    </div>
+                    <div class="modal-body">
+                        
+                            <div class="row" hidden>
+                                <label class="col-sm-4 control-label">Nom du dossier</label>
+                                <div class="col-sm-8">
+                                    <input id="nom" class="form-control" value="{{dossier.name}}"/>
+                                </div>
+                            </div>
+                        
+                            <div class="row" style="margin-top:10px">
+                                <label class="col-sm-4 control-label">Description</label>
+                                <div class="col-sm-8">
+                                    <textarea rows="5" id="description" class="form-control">{{dossier.description}}</textarea>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:10px">
+                                <label class="col-sm-4 control-label">Mots-clé</label>
+                                <div class="col-sm-8">
+                                    <input id="tags" class="form-control" value="{{dossier.tagsString}}">
+                                </div>
+                            </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" data-dismiss="modal" class="btn btn-default">Annuler</button>
+                        <button type="button" onclick="modifierDossier()" data-dismiss="modal" class="btn btn-primary">Modifier</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+              
+                                
+        <div id="modalAjouter" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4>Ajouter fichiers</h4>
+                    </div>
+                    <div class="modal-body">
+                        Sélectionnez les fichiers et attendez que les barres de progression deviennent vertes avant de fermer.
+                        <input id="files" type="file" name="files[]" multiple 
+                               data-bind="event:{change : handleFileSelect}"
+                               class="filestyle" 
+                               data-buttonText="Joindre" 
+                               data-icon="false" 
+                               data-input="false"
+                               data-badge="false">
+                        
+                        <div data-bind="foreach: uploadFiles">
+                            
+                            <div class="progress" style="margin:5px">
+                                <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="101" 
+                                     data-bind="attr:{'aria-valuenow':progress}, style: { width: progressPercentage}, css : { 'progress-bar-success' : success(), 'progress-bar-danger' : error() }" 
+                                     class="progress-bar">
+                                    <span data-bind="text:name"></span></div>
+                                
+                            </div>
+                            <div>
+                                <span data-bind="text:message"></span>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button id="ajouterModalAnnuler" type="button" data-dismiss="modal" class="btn btn-default">Annuler</button>
+                        <button id="ajouterModalEnvoyer" type="button" class="btn btn-primary" data-bind="click:sendClick">Envoyer</button>
+                        <button id="ajouterModalFermer" type="button" class="hide btn btn-primary" data-bind="click:closeClick">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="{{ asset('bundles/site/libs/knockout-3.1.0.js' ) }}" type="text/javascript"></script>
+        <script src="{{ asset('bundles/site/libs/bootstrap-filestyle.min.js' ) }}" type="text/javascript"></script>
+               
+        <script>
+
+            $("#ajouterLocation").val(window.location);
+            
+            function modifierDossier()
+            {
+                var data = {
+                    nom:$('#nom').val(),
+                    description:$('#description').val(),
+                    tags:$('#tags').val()
+                };
+                
+                console.log(data);
+
+                $.ajax({
+                    url: '/api/modifier-dossier',
+                    data: data,
+                    type: 'POST',
+                    cache: false,
+                    success: function (data) {
+                        window.location = window.location;
+                },
+                error: function(err) { alert(err); }
+                });
+            }
+
+
+            function createUploadFileViewModel(file)
+            {
+                var self = {};
+
+                self.docName = window.location.pathname.substr(window.location.pathname.lastIndexOf('/') + 1);
+                self.file = file;
+                self.name = file.name;
+                self.queued = ko.observable(true);
+                self.finished = ko.observable(false);
+                self.progress = ko.observable(0);
+                self.progressPercentage = ko.observable('0%');
+                self.progressColor = ko.observable('blue');
+                self.message = ko.observable('');
+                self.success = ko.observable(false);
+                self.error = ko.observable(false);
+
+                self.upload = function()
+                {
+                    self.queued(false);
+                    var formData = new FormData();
+                    formData.append('file', self.file);
+                    formData.append('nom', '{{dossier.name}}')
+                    var xhr = new XMLHttpRequest();
+
+                    xhr.open('post', '/api/ajouter-fichier', true);
+
+                    xhr.upload.onprogress = function(e) {
+                        if (e.lengthComputable) {
+                            var percentage = (e.loaded / e.total) * 100;
+                            self.progress(percentage);
+                            self.progressPercentage(percentage+"%");
+                        }
+                    };
+
+                    xhr.onerror = function(e) {
+                        alert('Erreur, peut-être que le fichier est trop gros');
+                    };
+
+                    xhr.onload = function() {
+                        self.progress(100);
+                        self.progressPercentage("100%");
+                        //self.progressColor(self.hasError ? 'red' : 'green');
+                        self.success(!self.hasError);
+                        self.error(self.hasError);
+                        self.finished(true);
+                    };
+
+                    xhr.onreadystatechange = function() {
+                        if (xhr.status == 500)
+                        {
+                            self.hasError = true;
+                            self.message(xhr.statusText);
+                        }
+                        
+                        
+                        //console.log(xhr.status);
+                        //console.log(xhr.statusText);
+
+                    };
+                    xhr.send(formData);
+                }
+
+                return self;
+            }
+            
+            function createViewModel()
+            {
+                var self = this;
+                    
+                self.uploadFiles = ko.observableArray();
+                
+                self.handleFileSelect = function(sender, evt) {
+                    var files = evt.target.files; // FileList object
+                    for (var i = 0; i<files.length; i++) {
+                        var newFileViewModel = createUploadFileViewModel(files[i]);
+                        self.uploadFiles.push(newFileViewModel);
+                    }
+                };
+                
+                self.uploadLoop = function()
+                {
+                    var array = self.uploadFiles();
+                    var len = array.length;
+                    var queuedCount = 0;
+                    var startedCount = 0;
+                    var firstQueued = undefined;
+                    for (var i=0; i<len; ++i)
+                    {
+                        if (array[i].queued())
+                        {
+                            if (firstQueued == undefined)
+                            {
+                                firstQueued = array[i];
+                            }
+                            queuedCount++;
+                        }
+                        else
+                        {
+                            if (!array[i].finished())
+                            {
+                                startedCount++;
+                            }
+                        }
+                    }
+                    if (startedCount < 2 && firstQueued != undefined)
+                    {
+                        console.log('start upload');
+                        firstQueued.upload();
+                    }
+                    setTimeout(self.uploadLoop, 1000);
+                };
+
+                self.startedUploadLoop = false;
+                self.sendClick = function()
+                {
+                    if (!self.startedUploadLoop)
+                    {
+                        self.uploadLoop();
+                    }
+                    self.startedUploadLoop = true;
+                    $('#ajouterModalFermer').removeClass('hide');
+                    $('#ajouterModalEnvoyer').addClass('hide');
+                    $('#ajouterModalAnnuler').addClass('hide');
+                    $('#files').addClass('hide');
+                }
+                
+                self.closeClick = function()
+                {
+                    window.location = window.location;
+                }
+                
+                self.downloadZip = function()
+                {
+                    var docUrl = window.location.pathname.substr(window.location.pathname.lastIndexOf('/') + 1);
+                    window.location.href = '/zip/' + docUrl;
+                };
+                
+                return self;
+            }
+
+            init = function()
+            {
+                console.log("init");
+                ko.applyBindings(createViewModel())
+            };
+
+            window.addEventListener('load',init,false);
+        </script>
+        
+        
+        
+        
+
+
+
+{% endblock %}

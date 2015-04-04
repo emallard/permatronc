@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width, initial-scale=0.666667, maximum-scale=0.666667, user-scalable=0">
+        <meta name="viewport" content="width=device-width">
+
+        <title></title>
+
+        <link rel="stylesheet" href="{{ asset('bundles/site/libs/bootstrap/css/bootstrap.css' ) }}" />
+        
+        {% block css %}{% endblock %}
+    </head>
+    
+<body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top navbar-collapse" 
+        role="navigation"
+         style="min-height:20px;">
+
+        <div class="navbar-header">
+           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+             <span class="sr-only">Toggle navigation</span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+           </button>
+        </div>
+
+       <div class="container collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+           <div class="row" style="margin-top:2px;text-align: center">
+               <div class="col-sm-2">
+                   <a href="http://ressources-permaculture.fr" style="color:white;">
+                       Portail RP.fr
+                   </a>
+               </div>
+               <div class="col-sm-2">
+                   <a href="http://ressources-permaculture.fr/librairie" style="color:#1155cc;">
+                       Librairie
+                   </a>
+               </div>
+               <div class="col-sm-2">
+                   <a href="http://cibul.net/permaculture?lang=fr" style="color:#e69138;">
+                       Calendrier
+                   </a>
+               </div>
+               <div class="col-sm-2">
+                   <a href="http://ressources-permaculture.fr/wakka.php?wiki=CreationDeRessources" style="color:#c27ba0;">
+                       Contribuer
+                   </a>
+               </div>
+               <div class="col-sm-2">
+                   <a href="http://ressources-permaculture.fr/wakka.php?wiki=RessourcesDocumentaires" style="color:#a61c00;">
+                       Formation
+                   </a>
+               </div>
+               <div class="col-sm-2">
+                   <a href="http://ressources-permaculture.fr/wakka.php?wiki=ContacT" style="color:white;">
+                       Contact
+                   </a>
+               </div>
+           </div>
+       </div>
+    </nav>
+    
+<div class="container">
+    <div class="container" style="margin-top:50px;">
+            
+        <div class="row">
+            <div class="col-sm-6" style="text-align:left">
+                <h1 style="margin-top:0px"> PERMATRONC</h1>
+                <a href="http://permabox.ressources-permaculture.fr" target="_blank">Aller dans la PermaBox</a>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="alert alert-warning"
+                     style="width:100%">
+
+                        {% include 'SiteBundle::Default/cadreinfo.html.twig' %}
+
+                </div>
+            </div>
+        </div>
+            
+    </div>
+</div>
+    
+    <script src="{{ asset('bundles/site/libs/jquery.min.js' ) }}" type="text/javascript"></script>
+    <script src="{{ asset('bundles/site/libs/bootstrap/bootstrap.min.js' ) }}" type="text/javascript"></script>
+    
+    {% block body %}{% endblock %}
+    
+    
+    
+    {% block javascript %}{% endblock %}
+    
+</body>
+</html>
