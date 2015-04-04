@@ -1,6 +1,9 @@
 imports:
     - { resource: config.yml }
 
+site:
+    directory: ../../permatroncfiles
+
 #framework:
 #    validation:
 #        cache: apc
