@@ -11,3 +11,5 @@ php app/console assetic:dump --env=prod --no-debug
 php app/console assets:install
 
 zip -rq ../distrib.zip ./
+cp installdistrib.php ../
+
