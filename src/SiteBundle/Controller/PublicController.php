@@ -17,7 +17,7 @@ class PublicController extends Controller
 {
     
     
-    private $_rootPath;// = "../../permatroncfiles";///home/etienne/permaculture/dev/test/fichiers";
+    private $_rootPath;
     
     
     private function getRootPath()
@@ -160,12 +160,20 @@ class PublicController extends Controller
         if (isset($q))
         {
             $dossiers = \SiteBundle\DocUtils::getSearchDocShort($this->getRootPath(), $q);
+            //sort files
+            usort($dossiers, function ($a, $b) {
+                return strnatcasecmp($a->name, $b->name) ;
+            });
             return array(
                 "dossiers" => $dossiers);
         }
         else
         {
             $dossiers = \SiteBundle\DocUtils::getAllDocShort($this->getRootPath());
+            //sort files
+            usort($dossiers, function ($a, $b) {
+                return strnatcasecmp($a->name, $b->name) ;
+            });
             return array(
                 "dossiers" => $dossiers);
         }
@@ -187,6 +195,12 @@ class PublicController extends Controller
         }
         
         $contenuDossier = \SiteBundle\DocUtils::getFullDossier($this->getRootPath(), $dossier);      
+        
+        //sort files
+        usort($contenuDossier->files, function ($a, $b) {
+            return strnatcasecmp($a->name, $b->name) ;
+        });
+                
         return $this->render('SiteBundle:Default:dossier.html.twig', array("dossier" => $contenuDossier));
     }
     

@@ -2,7 +2,7 @@ imports:
     - { resource: config.yml }
 
 site:
-    directory: ../../permatroncfiles
+    directory: ../../PERMATRONC_data/
 
 #framework:
 #    validation:

@@ -2,7 +2,7 @@ imports:
     - { resource: config.yml }
 
 site:
-    directory: /home/etienne/permaculture/dev/test/fichiers
+    directory: ../../PERMATRONC_data/
     
 framework:
     router:
